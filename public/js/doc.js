@@ -60,4 +60,15 @@ window.onload = function() {
 		outputBody.append(styleTag);
 		outputBody.append(scriptTag);
 	});
+
+	// Toolbar
+
+	var toggleBurger = $('.hamburger-toggle');
+	var list = $('.toggle-list');
+
+	toggleBurger.click(
+		function() {
+			list.toggleClass('hide');
+		}
+	);
 };
