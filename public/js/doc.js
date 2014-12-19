@@ -40,4 +40,16 @@ window.onload = function() {
 	editors.htmlEditor = htmlEditor;
 	editors.cssEditor = cssEditor;
 	editors.javascriptEditor = javascriptEditor;
+
+
+	// Toolbar
+
+	var toggleBurger = $('.hamburger-toggle');
+	var list = $('.toggle-list');
+
+	toggleBurger.click(
+		function() {
+			list.toggleClass('hide');
+		}
+	);
 };
