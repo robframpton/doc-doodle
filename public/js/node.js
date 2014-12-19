@@ -11,6 +11,8 @@ var menu = new gui.Menu(
 	}
 );
 
-menu.createMacBuiltin("My App");
+if (menu.createMacBuiltin) {
+	menu.createMacBuiltin("My App");
+}
 
 win.menu = menu;
