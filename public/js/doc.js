@@ -1,43 +1,63 @@
+var _ = require('lodash');
+
 window.onload = function() {
-	var htmlPanel = $('#htmlPanel'),
-		cssPanel = $('#cssPanel'),
-		javascriptPanel = $('#javascriptPanel'),
+	var htmlPanel = $('#htmlPanel')[0],
+		cssPanel = $('#cssPanel')[0],
+		javascriptPanel = $('#javascriptPanel')[0],
 		editors = {};
 
 	var htmlEditor = CodeMirror(
-		htmlPanel[0],
+		htmlPanel,
 		{
 			keymap: "sublime",
 			lineNumbers: true,
 			mode:  "html",
 			theme: "ambiance",
-			value: "This is for HTML"
+			value: "<div>This is some base HTML</div>"
 		}
 	);
 
 	var cssEditor = CodeMirror(
-		cssPanel[0],
+		cssPanel,
 		{
 			keymap: "sublime",
 			lineNumbers: true,
 			mode:  "css",
 			theme: "ambiance",
-			value: "This is for CSS"
+			value: "div {\n    background-color: red;\n    height: 100px;\n    width: 100px;\n}"
 		}
 	);
 
 	var javascriptEditor = CodeMirror(
-		javascriptPanel[0],
+		javascriptPanel,
 		{
 			keymap: "sublime",
 			lineNumbers: true,
 			mode:  "javascript",
 			theme: "ambiance",
-			value: "This is for Javascript"
+			value: "// This is for Javascript"
 		}
 	);
 
 	editors.htmlEditor = htmlEditor;
 	editors.cssEditor = cssEditor;
 	editors.javascriptEditor = javascriptEditor;
+
+	var button = $('#run');
+
+	button.on('click', function(event) {
+		var cssContent = cssEditor.doc.getValue();
+		var htmlContent = htmlEditor.doc.getValue();
+		var jsContent = javascriptEditor.doc.getValue();
+		var styleTag = $('<style type="text/css">' + cssContent + '</style>');
+		var scriptTag = $('<script>' + jsContent + '</script>');
+		var output = $('#outputFrame').contents().find('html');
+
+		output.html(htmlContent);
+
+		var outputBody = output.find('body');
+
+		outputBody.append(styleTag);
+		outputBody.append(scriptTag);
+	});
 };
