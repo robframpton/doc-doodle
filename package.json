@@ -1,0 +1,25 @@
+{
+  "main": "index.html",
+  "name": "doc-doodle",
+  "description": "An HTML, CSS, and Javascript doodler for your Desktop.",
+  "version": "0.1.0",
+  "keywords": [
+    "html",
+    "css",
+    "javascript"
+  ],
+  "window": {
+    "title": "DocDoodle",
+    "icon": "link.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 800,
+    "height": 900,
+    "position": "mouse",
+    "min_width": 600,
+    "min_height": 200
+  },
+  "dependencies": {
+
+  }
+}
