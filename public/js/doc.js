@@ -47,30 +47,28 @@ window.onload = function() {
 
 	var button = $('#run');
 
-	var jsTemplateText = '<script type="text/javascript">try {<%= script %>}catch(error) {console.log("error: ", error)}finally {console.log("End");}</script>';
+	var jsTemplateText = '<script type="text/javascript">try {window.onload = function() {<%= script %>}()}catch(error) {}finally {console.log("End");}</script>';
 	var cssTemplateText = '<style type="text/css"><%= css %></style>';
 
 	button.on('click', function(event) {
-		var cssContent = cssEditor.doc.getValue('\n');
-		var htmlContent = htmlEditor.doc.getValue('\n');
-		var jsContent = javascriptEditor.doc.getValue('\n');
-		var styleTag = $(_.template(cssTemplateText, {css: cssContent}));
+		var styleTag = $(_.template(cssTemplateText, {css: cssEditor.doc.getValue('\n')}));
 		var output = $('#outputFrame').contents().find('html');
 
-		output.html(htmlContent);
+		output.html(htmlEditor.doc.getValue('\n'));
 
 		var outputBody = output.find('body');
 
 		outputBody.append(styleTag);
 
-		compressor.compress(jsContent, {
+		compressor.compress(javascriptEditor.doc.getValue('\n'), {
 			charset: 'utf8',
 			type: 'js',
 			nomunge: true,
 			'line-break': 80
 		}, function(err, data) {
 			if (err) {
-				console.log('err: ', err);
+				console.log(err);
+				$('#error-display').html(err);
 			}
 			else {
 				var scriptTag = $(_.template(jsTemplateText, {script: data}));
