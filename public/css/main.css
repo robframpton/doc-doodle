@@ -47,3 +47,20 @@
 .options {
 	display: none;
 }
+
+.hamburger-toggle {
+	font-size: 25px;
+}
+
+.col-sm-6 {
+	padding: 0 15px 0 0;
+}
+
+.container-fluid > .row {
+	margin-left: 15px;
+}
+
+.container-fluid {
+	padding: 0;
+	margin: 0 15px 0 0;
+}
