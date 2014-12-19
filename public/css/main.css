@@ -1,0 +1,24 @@
+.navbar-collapse {
+	background: #3D3D3D;
+}
+
+.navbar-nav {
+	width: 100%
+}
+
+.navbar .navbar-nav > li > a {
+	color: #e18728
+}
+
+.navbar .navbar-nav > li > a {
+	color: #e18728
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+	background-color: #e18728
+	color: #777;
+}
+
+.navbar-default .nav li:hover {
+	background-color: #e18728
+}
