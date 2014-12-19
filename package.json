@@ -20,6 +20,6 @@
     "min_height": 200
   },
   "dependencies": {
-
+    "lodash": "^2.4.1"
   }
 }
