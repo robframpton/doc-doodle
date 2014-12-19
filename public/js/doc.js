@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var compressor = require('yuicompressor');
 
 window.onload = function() {
 	var body = $('body'),
@@ -46,12 +47,14 @@ window.onload = function() {
 
 	var button = $('#run');
 
+	var jsTemplateText = '<script type="text/javascript">try {<%= script %>}catch(error) {console.log("error: ", error)}finally {console.log("End");}</script>';
+	var cssTemplateText = '<style type="text/css"><%= css %></style>';
+
 	button.on('click', function(event) {
-		var cssContent = cssEditor.doc.getValue();
-		var htmlContent = htmlEditor.doc.getValue();
-		var jsContent = javascriptEditor.doc.getValue();
-		var styleTag = $('<style type="text/css">' + cssContent + '</style>');
-		var scriptTag = $('<script>' + jsContent + '</script>');
+		var cssContent = cssEditor.doc.getValue('\n');
+		var htmlContent = htmlEditor.doc.getValue('\n');
+		var jsContent = javascriptEditor.doc.getValue('\n');
+		var styleTag = $(_.template(cssTemplateText, {css: cssContent}));
 		var output = $('#outputFrame').contents().find('html');
 
 		output.html(htmlContent);
@@ -59,7 +62,21 @@ window.onload = function() {
 		var outputBody = output.find('body');
 
 		outputBody.append(styleTag);
-		outputBody.append(scriptTag);
+
+		compressor.compress(jsContent, {
+			charset: 'utf8',
+			type: 'js',
+			nomunge: true,
+			'line-break': 80
+		}, function(err, data) {
+			if (err) {
+				console.log('err: ', err);
+			}
+			else {
+				var scriptTag = $(_.template(jsTemplateText, {script: data}));
+				outputBody.append(scriptTag);
+			}
+		});
 	});
 
 	// Toolbar
