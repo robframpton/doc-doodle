@@ -1,13 +1,14 @@
 var _ = require('lodash');
 
 window.onload = function() {
-	var htmlPanel = $('#htmlPanel')[0],
-		cssPanel = $('#cssPanel')[0],
-		javascriptPanel = $('#javascriptPanel')[0],
+	var body = $('body'),
+		htmlPanel = $('#htmlPanel'),
+		cssPanel = $('#cssPanel'),
+		javascriptPanel = $('#javascriptPanel'),
 		editors = {};
 
 	var htmlEditor = CodeMirror(
-		htmlPanel,
+		htmlPanel.find('.editor')[0],
 		{
 			keymap: "sublime",
 			lineNumbers: true,
@@ -18,7 +19,7 @@ window.onload = function() {
 	);
 
 	var cssEditor = CodeMirror(
-		cssPanel,
+		cssPanel.find('.editor')[0],
 		{
 			keymap: "sublime",
 			lineNumbers: true,
@@ -29,7 +30,7 @@ window.onload = function() {
 	);
 
 	var javascriptEditor = CodeMirror(
-		javascriptPanel,
+		javascriptPanel.find('.editor')[0],
 		{
 			keymap: "sublime",
 			lineNumbers: true,
@@ -69,6 +70,15 @@ window.onload = function() {
 	toggleBurger.click(
 		function() {
 			list.toggleClass('hide');
+		}
+	);
+
+	// Libraries toggle
+
+	$('#librariesToggle').on(
+		'click',
+		function(event) {
+			body.toggleClass('show-options');
 		}
 	);
 };

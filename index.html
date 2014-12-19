@@ -22,10 +22,10 @@
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
 					<li class="active">
-						<a id="run" href="javascript:;">Run</a>
+						<a href="javascript:;" id="run">Run</a>
 					</li>
 					<li class="">
-						<a href="javascript:;">Libraries</a>
+						<a href="javascript:;" id="librariesToggle">Libraries</a>
 					</li>
 					<li class="">
 						<a href="javascript:;">Templates</a>
@@ -45,21 +45,36 @@
 		<div class="container-fluid" id="wrapper">
 			<div class="row">
 				<div class="col-sm-6">
-					<div id="htmlPanel">
+					<div class="panel" id="htmlPanel">
+						<div class="editor">
+						</div>
 					</div>
 				</div>
 				<div class="col-sm-6">
-					<div id="cssPanel">
+					<div class="panel" id="cssPanel">
+						<div class="options-toggle">X
+						</div>
+						<div class="options">Options
+						</div>
+						<div class="editor">
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
-					<div id="javascriptPanel">
+					<div class="panel" id="javascriptPanel">
+						<div class="options-toggle">X
+						</div>
+						<div class="options">Options
+						</div>
+						<div class="editor">
+						</div>
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div id="outputPanel">
+					<div class="panel" id="outputPanel">
 						<iframe id="outputFrame" src="output.html"></iframe>
 					</div>
 				</div>

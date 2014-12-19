@@ -31,3 +31,19 @@
 .navbar-default .nav li:hover {
 	background-color: #E18728
 }
+
+.panel {
+	position: relative;
+}
+
+.options-toggle {
+	color: white;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+
+.options {
+	display: none;
+}
