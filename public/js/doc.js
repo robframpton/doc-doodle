@@ -61,6 +61,26 @@ window.onload = function() {
 		iframe.src = iframe.src;
 	}
 
+	function rightOutputFile(editor, value, config) {
+		if (!value) {
+			value = editor.doc.getValue();
+		}
+
+		fs.writeFile(
+			'output/' + config.fileName,
+			value,
+			function (err) {
+				if (!err) {
+					if (config.message) {
+						console.log(config.message);
+					}
+
+					refreshContent();
+				}
+			}
+		);
+	}
+
 	var refreshContent = _.debounce(refreshIframe, 200);
 
 	function updateAll() {
@@ -70,31 +90,25 @@ window.onload = function() {
 	}
 
 	function updateCSS(value) {
-		if (!value) {
-			value = CSSEditor.doc.getValue();
-		}
-
-		fs.writeFile('output/output-css.css', value, function (err) {
-			if (!err) {
-				console.log('CSS saved!');
-
-				refreshContent();
+		rightOutputFile(
+			CSSEditor,
+			value,
+			{
+				fileName: 'output-css.css',
+				message: 'CSS saved!'
 			}
-		});
+		);
 	}
 
 	function updateHTML(value) {
-		if (!value) {
-			value = HTMLEditor.doc.getValue();
-		}
-
-		fs.writeFile('output/output-html.html', value, function (err) {
-			if (!err) {
-				console.log('HTML saved!');
-
-				refreshContent();
+		rightOutputFile(
+			HTMLEditor,
+			value,
+			{
+				fileName: 'output-html.html',
+				message: 'HTML saved!'
 			}
-		});
+		);
 	}
 
 	function updateJS(value) {
@@ -124,13 +138,14 @@ window.onload = function() {
 					$('#error-display').html(err);
 				}
 				else {
-					fs.writeFile('output/output-js.js', data, function (err) {
-						if (!err) {
-							console.log('Javascript saved!');
-
-							refreshContent();
+					rightOutputFile(
+						JSEditor,
+						data,
+						{
+							fileName: 'output-js.js',
+							message: 'Javascript saved!'
 						}
-					});
+					);
 				}
 			}
 		);
