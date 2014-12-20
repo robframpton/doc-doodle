@@ -24,7 +24,7 @@ body {
 	padding: 0 35px 0 0;
 	position: absolute;
 	width: 100%;
-	z-index: 10;
+	z-index: 401;
 }
 
 .navbar .navbar-nav > li > a {
@@ -47,6 +47,23 @@ body {
 
 .navbar-default .nav li:hover {
 	background-color: #E18728
+}
+
+.template-list, .toggle-list {
+	padding: 15px 0;
+}
+
+.template-list > li, .toggle-list > li {
+	padding: 5px 15px;
+}
+
+.template-list > li:hover > a, .toggle-list > li:hover > a {
+	color: #3D3D3D;
+	text-decoration: none;
+}
+
+.template-list > li:hover, .toggle-list > li:hover {
+	background: #E18728;
 }
 
 .panel {
