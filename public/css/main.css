@@ -128,7 +128,7 @@ body {
 	z-index: 300;
 }
 
-.hamburger-toggle, .open-dev-tools {
+#menuToggle, .open-dev-tools {
 	font-size: 25px;
 }
 

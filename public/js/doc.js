@@ -107,7 +107,7 @@ window.onload = function() {
 		}
 	);
 
-	createToggler('.hamburger-toggle', '.toggle-list');
+	createToggler('#menuToggle', '.toggle-list');
 	createToggler('#templatesToggle', '.template-list');
 
 	// Toolbar
