@@ -1,5 +1,8 @@
 var _ = require('lodash');
+var fs = require('fs');
 var compressor = require('yuicompressor');
+
+var CWD = process.cwd();
 
 window.onload = function() {
 	var body = $('body'),
@@ -102,6 +105,63 @@ window.onload = function() {
 	toggleBurger.click(
 		function() {
 			list.toggleClass('hide');
+		}
+	);
+
+	var templatesToggle = $('#templatesToggle');
+	var templateList = $('.template-list');
+
+	templatesToggle.click(
+		function() {
+			templateList.toggleClass('hide');
+		}
+	);
+
+	// Template functions
+	var tempMessage = 'Are you sure you want to change markup? All data will be lost.';
+
+	var clickableButton = $('#clickButton');
+
+	clickableButton.click(
+		function() {
+			fs.readFile(CWD + '/templates/onClick.html', {encoding: 'utf8'},function (err, data) {
+				if (err) throw err;
+					htmlEditor.doc.setValue(data);
+				}
+			);
+			fs.readFile(CWD + '/templates/onClick.css', {encoding: 'utf8'},function (err, data) {
+				if (err) throw err;
+					cssEditor.doc.setValue(data);
+				}
+			);
+			fs.readFile(CWD + '/templates/onClick.js', {encoding: 'utf8'},function (err, data) {
+				if (err) throw err;
+					javascriptEditor.doc.setValue(data);
+				}
+			);
+
+			templateList.toggleClass('hide');
+		}
+	);
+
+	var firstParagraph = $('#firstParagraph');
+
+	firstParagraph.click(
+		function() {
+			fs.readFile(CWD + '/templates/firstParagraph.html', {encoding: 'utf8'},function (err, data) {
+				if (err) throw err;
+					htmlEditor.doc.setValue(data);
+				}
+			);
+			fs.readFile(CWD + '/templates/firstParagraph.css', {encoding: 'utf8'},function (err, data) {
+				if (err) throw err;
+					cssEditor.doc.setValue(data);
+				}
+			);
+
+			javascriptEditor.doc.setValue('// Do something here');
+
+			templateList.toggleClass('hide');
 		}
 	);
 

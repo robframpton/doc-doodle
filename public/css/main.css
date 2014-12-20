@@ -18,7 +18,7 @@ body {
 	width: 100%
 }
 
-.toggle-list {
+.toggle-list, .template-list {
 	background-color: #333;
 	list-style-type:none;
 	padding: 0 35px 0 0;
@@ -31,7 +31,7 @@ body {
 	color: #E18728
 }
 
-.navbar .navbar-nav > li > a, .toggle-list a {
+.navbar .navbar-nav > li > a, .toggle-list a, .template-list a {
 	color: #E18728
 }
 
