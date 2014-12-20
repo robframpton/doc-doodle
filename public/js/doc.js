@@ -28,36 +28,40 @@ window.onload = function() {
 
 	win.on('resize', resizePanels);
 
-	var htmlEditor = CodeMirror(
-		htmlPanel.find('.editor')[0],
+	function createEditor(config) {
+		return CodeMirror(
+			config.panel.find('.editor')[0],
+			{
+				keymap: "sublime",
+				lineNumbers: true,
+				mode:  config.mode,
+				theme: "ambiance",
+				value: config.value
+			}
+		);
+	}
+
+	var htmlEditor = createEditor(
 		{
-			keymap: "sublime",
-			lineNumbers: true,
-			mode:  "html",
-			theme: "ambiance",
-			value: "<div>This is some base HTML</div>"
+			mode: 'html',
+			panel: htmlPanel,
+			value: '<div>html</div>'
 		}
 	);
 
-	var cssEditor = CodeMirror(
-		cssPanel.find('.editor')[0],
+	var cssEditor = createEditor(
 		{
-			keymap: "sublime",
-			lineNumbers: true,
-			mode:  "css",
-			theme: "ambiance",
-			value: "div {\n    background-color: red;\n    height: 100px;\n    width: 100px;\n}"
+			mode: 'css',
+			panel: cssPanel,
+			value: 'div {\n    background-color: red;\n    height: 100px;\n    width: 100px;\n}'
 		}
 	);
 
-	var javascriptEditor = CodeMirror(
-		javascriptPanel.find('.editor')[0],
+	var javascriptEditor = createEditor(
 		{
-			keymap: "sublime",
-			lineNumbers: true,
-			mode:  "javascript",
-			theme: "ambiance",
-			value: "// This is for Javascript"
+			mode: 'javascript',
+			panel: javascriptPanel,
+			value: '// This is for Javascript'
 		}
 	);
 
