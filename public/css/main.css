@@ -136,7 +136,7 @@ body {
 	z-index: 300;
 }
 
-#menuToggle, .open-dev-tools {
+#menuToggle, .open-dev-tools, .reload {
 	font-size: 25px;
 }
 

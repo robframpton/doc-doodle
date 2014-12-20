@@ -198,6 +198,13 @@ window.onload = function() {
 		}
 	);
 
+	$('.reload').on(
+		'click',
+		function() {
+			gui.Window.get().reload();
+		}
+	);
+
 	// Template functions
 	var tempMessage = 'Are you sure you want to change markup? All data will be lost.';
 
