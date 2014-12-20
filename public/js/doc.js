@@ -54,7 +54,7 @@ window.onload = function() {
 
 	var htmlEditor = createEditor(
 		{
-			mode: 'html',
+			mode: 'htmlmixed',
 			panel: htmlPanel,
 			value: '<div>html</div>'
 		}
