@@ -93,6 +93,12 @@ window.onload = function() {
 
 	// Toolbar
 
+	var openDevTools = $('.open-dev-tools');
+
+	openDevTools.on('click', function() {
+		gui.Window.get().showDevTools();
+	});
+
 	var toggleBurger = $('.hamburger-toggle');
 	var settings = $('.toggle-list');
 
