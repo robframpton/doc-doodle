@@ -61,6 +61,8 @@ window.onload = function() {
 		iframe.src = iframe.src;
 	}
 
+	var refreshContent = _.debounce(refreshIframe, 200);
+
 	function updateAll() {
 		updateHTML();
 		updateCSS();
@@ -76,7 +78,7 @@ window.onload = function() {
 			if (!err) {
 				console.log('CSS saved!');
 
-				refreshIframe();
+				refreshContent();
 			}
 		});
 	}
@@ -90,7 +92,7 @@ window.onload = function() {
 			if (!err) {
 				console.log('HTML saved!');
 
-				refreshIframe();
+				refreshContent();
 			}
 		});
 	}
@@ -126,7 +128,7 @@ window.onload = function() {
 						if (!err) {
 							console.log('Javascript saved!');
 
-							refreshIframe();
+							refreshContent();
 						}
 					});
 				}
