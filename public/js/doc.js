@@ -64,31 +64,36 @@ window.onload = function() {
 		}
 	);
 
-	var button = $('#run');
+	$('#run').on(
+		'click',
+		function(event) {
+			var output = $('#outputFrame').contents().find('html');
 
-	button.on('click', function(event) {
-		var output = $('#outputFrame').contents().find('html');
-		var outputHead = output.find('head');
+			output.find('body').html(htmlEditor.doc.getValue('\n'));
 
-		output.find('body').html(htmlEditor.doc.getValue('\n'));
+			output.find('#customCSS').html(cssEditor.doc.getValue('\n'));
 
-		output.find('#customCSS').html(cssEditor.doc.getValue('\n'));
+			compressor.compress(
+				javascriptEditor.doc.getValue('\n'),
+				{
+					'line-break': 80,
+					charset: 'utf8',
+					nomunge: true,
+					type: 'js'
+				},
+				function(err, data) {
+					if (err) {
+						console.log(err);
 
-		compressor.compress(javascriptEditor.doc.getValue('\n'), {
-			charset: 'utf8',
-			type: 'js',
-			nomunge: true,
-			'line-break': 80
-		}, function(err, data) {
-			if (err) {
-				console.log(err);
-				$('#error-display').html(err);
-			}
-			else {
-				output.find('#customJS').html(data);
-			}
-		});
-	});
+						$('#error-display').html(err);
+					}
+					else {
+						output.find('#customJS').html(data);
+					}
+				}
+			);
+		}
+	);
 
 	// Toolbar
 
