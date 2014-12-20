@@ -77,7 +77,7 @@ window.onload = function() {
 
 		output.find('body').html(htmlEditor.doc.getValue('\n'));
 
-		outputHead.append(styleTag);
+		output.find('#customCSS').html(cssEditor.doc.getValue('\n'));
 
 		compressor.compress(javascriptEditor.doc.getValue('\n'), {
 			charset: 'utf8',
@@ -90,8 +90,7 @@ window.onload = function() {
 				$('#error-display').html(err);
 			}
 			else {
-				var scriptTag = $(_.template(jsTemplateText, {script: data}));
-				outputHead.append(scriptTag);
+				output.find('#customJS').html(data);
 			}
 		});
 	});
