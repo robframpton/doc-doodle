@@ -10,12 +10,21 @@ body {
 	border-radius: 0;
 }
 
-.navbar-collapse {
+.navbar {
 	background: #3D3D3D;
 }
 
 .navbar-nav {
 	width: 100%
+}
+
+.dr-doodle-icon {
+	display: block;
+	height: 30px;
+	left: 50%;
+	margin-left: -120px !important;
+	position: absolute;
+	top: 10px;
 }
 
 .toggle-list, .template-list {
@@ -51,6 +60,7 @@ body {
 
 .template-list, .toggle-list {
 	padding: 15px 0;
+	top: 51px;
 }
 
 .template-list > li, .toggle-list > li {
@@ -69,6 +79,14 @@ body {
 .panel {
 	border-radius: 0;
 	position: relative;
+}
+
+.panel-title {
+	bottom: 10px;
+	color: #555;
+	font-size: 30px;
+	position: absolute;
+	right: 20px;
 }
 
 #outputFrame {
