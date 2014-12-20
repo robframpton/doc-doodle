@@ -60,6 +60,7 @@ body {
 
 .template-list, .toggle-list {
 	padding: 15px 0;
+	top: 51px;
 }
 
 .template-list > li, .toggle-list > li {
