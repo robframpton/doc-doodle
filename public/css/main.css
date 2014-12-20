@@ -62,7 +62,7 @@ body {
 .options-toggle {
 	color: white;
 	cursor: pointer;
-	display: none;
+	display: inline-block;
 	font-size: 16px;
 	padding: 2px 6px;
 	position: absolute;
@@ -73,10 +73,6 @@ body {
 
 .options-toggle i {
 	cursor: pointer;
-}
-
-.show-options .options-toggle {
-	display: inline-block;
 }
 
 .options {

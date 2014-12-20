@@ -164,15 +164,6 @@ window.onload = function() {
 		}
 	);
 
-	// Libraries toggle
-
-	$('#librariesToggle').on(
-		'click',
-		function(event) {
-			body.toggleClass('show-options');
-		}
-	);
-
 	// Options toggle
 
 	$('.options-toggle').on(
