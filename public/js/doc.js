@@ -3,10 +3,27 @@ var compressor = require('yuicompressor');
 
 window.onload = function() {
 	var body = $('body'),
-		htmlPanel = $('#htmlPanel'),
 		cssPanel = $('#cssPanel'),
+		editors = {},
+		htmlPanel = $('#htmlPanel'),
 		javascriptPanel = $('#javascriptPanel'),
-		editors = {};
+		win = $(window);
+
+	// Panel height
+
+	function resizePanels() {
+		var windowHeight = win.height();
+		var navbarHeight = $('.navbar').outerHeight() * 2;
+		var containerHeight = windowHeight - navbarHeight;
+
+		var panelHeight = (containerHeight / 2) - 10;
+
+		$('.editor, #outputFrame').css('height', panelHeight + 'px');
+	}
+
+	resizePanels();
+
+	win.on('resize', resizePanels);
 
 	var htmlEditor = CodeMirror(
 		htmlPanel.find('.editor')[0],
