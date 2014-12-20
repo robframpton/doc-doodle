@@ -67,18 +67,17 @@ window.onload = function() {
 
 	var button = $('#run');
 
-	var jsTemplateText = '<script type="text/javascript">try {window.onload = function() {<%= script %>}()}catch(error) {}finally {console.log("End");}</script>';
+	var jsTemplateText = '<script type="text/javascript">try {<%= script %>}catch(error) {}</script>';
 	var cssTemplateText = '<style type="text/css"><%= css %></style>';
 
 	button.on('click', function(event) {
 		var styleTag = $(_.template(cssTemplateText, {css: cssEditor.doc.getValue('\n')}));
 		var output = $('#outputFrame').contents().find('html');
+		var outputHead = output.find('head');
 
-		output.html(htmlEditor.doc.getValue('\n'));
+		output.find('body').html(htmlEditor.doc.getValue('\n'));
 
-		var outputBody = output.find('body');
-
-		outputBody.append(styleTag);
+		outputHead.append(styleTag);
 
 		compressor.compress(javascriptEditor.doc.getValue('\n'), {
 			charset: 'utf8',
@@ -92,7 +91,7 @@ window.onload = function() {
 			}
 			else {
 				var scriptTag = $(_.template(jsTemplateText, {script: data}));
-				outputBody.append(scriptTag);
+				outputHead.append(scriptTag);
 			}
 		});
 	});
