@@ -13,18 +13,6 @@ window.onload = function() {
 
 	// Panel height
 
-	function resizePanels() {
-		var containerHeight = win.height() - ($('.navbar').outerHeight() * 2);
-
-		var panelHeight = (containerHeight / 2) - 10;
-
-		$('.editor, #outputFrame').css('height', panelHeight + 'px');
-	}
-
-	resizePanels();
-
-	win.on('resize', resizePanels);
-
 	function createEditor(config) {
 		return CodeMirror(
 			config.panel.find('.editor')[0],
@@ -37,6 +25,32 @@ window.onload = function() {
 			}
 		);
 	}
+
+	function createToggler(toggler, content) {
+		toggler = $(toggler);
+		content = $(content);
+
+		toggler.on(
+			'click',
+			function(event) {
+				content.toggleClass('hide');
+
+				toggler.toggleClass('open', !content.hasClass('hide'));
+			}
+		);
+	}
+
+	function resizePanels() {
+		var containerHeight = win.height() - ($('.navbar').outerHeight() * 2);
+
+		var panelHeight = (containerHeight / 2) - 10;
+
+		$('.editor, #outputFrame').css('height', panelHeight + 'px');
+	}
+
+	resizePanels();
+
+	win.on('resize', resizePanels);
 
 	var htmlEditor = createEditor(
 		{
@@ -93,38 +107,15 @@ window.onload = function() {
 		}
 	);
 
+	createToggler('.hamburger-toggle', '.toggle-list');
+	createToggler('#templatesToggle', '.template-list');
+
 	// Toolbar
 
 	$('.open-dev-tools').on(
 		'click',
 		function() {
 			gui.Window.get().showDevTools();
-		}
-	);
-
-	var toggleBurger = $('.hamburger-toggle');
-	var settings = $('.toggle-list');
-
-	var templatesToggle = $('#templatesToggle');
-	var templateList = $('.template-list');
-
-	toggleBurger.click(
-		function() {
-			settings.toggleClass('hide');
-
-			if (!templateList.hasClass('hide')) {
-				templateList.toggleClass('hide');
-			}
-		}
-	);
-
-	templatesToggle.click(
-		function() {
-			templateList.toggleClass('hide');
-
-			if (!settings.hasClass('hide')) {
-				settings.toggleClass('hide');
-			}
 		}
 	);
 
