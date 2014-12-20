@@ -113,4 +113,17 @@ window.onload = function() {
 			body.toggleClass('show-options');
 		}
 	);
+
+	// Options toggle
+
+	$('.options-toggle').on(
+		'click',
+		function(event) {
+			currentTarget = $(event.currentTarget);
+
+			var optionsPanel = currentTarget.next('.options');
+
+			optionsPanel.toggleClass('open');
+		}
+	);
 };
