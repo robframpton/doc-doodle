@@ -11,7 +11,7 @@
   "window": {
     "title": "DocDoodle",
     "icon": "link.png",
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "width": 1000,
     "height": 900,
