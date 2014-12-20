@@ -81,6 +81,14 @@ body {
 	position: relative;
 }
 
+.panel-title {
+	bottom: 10px;
+	color: #555;
+	font-size: 30px;
+	position: absolute;
+	right: 20px;
+}
+
 #outputFrame {
 	border-width: 0;
 	width: 100%;
