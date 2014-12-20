@@ -12,12 +12,8 @@ window.onload = function() {
 		HTMLPanel = $('#HTMLPanel'),
 		JSEditor;
 		JSPanel = $('#JSPanel'),
-		JSTemplate = 'try {<%= script %>} catch (e) {}',
-		output = $('#outputFrame').contents().find('HTML'),
-		outputBody = output.find('body'),
-		outputCSS = output.find('#customCSS'),
-		outputHead = output.find('head'),
-		outputJS = output.find('#customJS'),
+		JSTemplate = 'window.onload = function() {try{<%= script %>} catch(e){}}',
+		templateList = $('.template-list'),
 		win = $(window);
 
 	// Panel height
@@ -57,6 +53,14 @@ window.onload = function() {
 		$('.editor, #outputFrame').css('height', panelHeight + 'px');
 	}
 
+	function refreshIframe() {
+		console.log('Reloading iframe...');
+
+		var iframe = $('#outputFrame')[0];
+
+		iframe.src = iframe.src;
+	}
+
 	function updateAll() {
 		updateHTML();
 		updateCSS();
@@ -68,7 +72,13 @@ window.onload = function() {
 			value = CSSEditor.doc.getValue();
 		}
 
-		outputCSS.html(value);
+		fs.writeFile('output/output-css.css', value, function (err) {
+			if (!err) {
+				console.log('CSS saved!');
+
+				refreshIframe();
+			}
+		});
 	}
 
 	function updateHTML(value) {
@@ -76,7 +86,13 @@ window.onload = function() {
 			value = HTMLEditor.doc.getValue();
 		}
 
-		outputBody.html(value);
+		fs.writeFile('output/output-html.html', value, function (err) {
+			if (!err) {
+				console.log('HTML saved!');
+
+				refreshIframe();
+			}
+		});
 	}
 
 	function updateJS(value) {
@@ -106,17 +122,13 @@ window.onload = function() {
 					$('#error-display').html(err);
 				}
 				else {
-					updateHTML();
+					fs.writeFile('output/output-js.js', data, function (err) {
+						if (!err) {
+							console.log('Javascript saved!');
 
-					outputJS = output.find('#customJS');
-
-					var clone = outputJS;
-
-					outputJS.remove();
-
-					outputHead.append(clone);
-
-					clone.html(value);
+							refreshIframe();
+						}
+					});
 				}
 			}
 		);
@@ -146,7 +158,7 @@ window.onload = function() {
 		{
 			mode: 'javascript',
 			panel: JSPanel,
-			value: '// This is for Javascript'
+			value: '// This is for Javascript\n'
 		}
 	);
 
