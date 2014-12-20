@@ -12,12 +12,8 @@ window.onload = function() {
 		HTMLPanel = $('#HTMLPanel'),
 		JSEditor;
 		JSPanel = $('#JSPanel'),
-		JSTemplate = 'try {<%= script %>} catch (e) {}',
-		output = $('#outputFrame').contents().find('HTML'),
-		outputBody = output.find('body'),
-		outputCSS = output.find('#customCSS'),
-		outputHead = output.find('head'),
-		outputJS = output.find('#customJS'),
+		JSTemplate = 'window.onload = function() {try{<%= script %>} catch(e){}}',
+		templateList = $('.template-list'),
 		win = $(window);
 
 	// Panel height
@@ -57,6 +53,36 @@ window.onload = function() {
 		$('.editor, #outputFrame').css('height', panelHeight + 'px');
 	}
 
+	function refreshIframe() {
+		console.log('Reloading iframe...');
+
+		var iframe = $('#outputFrame')[0];
+
+		iframe.src = iframe.src;
+	}
+
+	function rightOutputFile(editor, value, config) {
+		if (!value) {
+			value = editor.doc.getValue();
+		}
+
+		fs.writeFile(
+			'output/' + config.fileName,
+			value,
+			function (err) {
+				if (!err) {
+					if (config.message) {
+						console.log(config.message);
+					}
+
+					refreshContent();
+				}
+			}
+		);
+	}
+
+	var refreshContent = _.debounce(refreshIframe, 200);
+
 	function updateAll() {
 		updateHTML();
 		updateCSS();
@@ -64,19 +90,25 @@ window.onload = function() {
 	}
 
 	function updateCSS(value) {
-		if (!value) {
-			value = CSSEditor.doc.getValue();
-		}
-
-		outputCSS.html(value);
+		rightOutputFile(
+			CSSEditor,
+			value,
+			{
+				fileName: 'output-css.css',
+				message: 'CSS saved!'
+			}
+		);
 	}
 
 	function updateHTML(value) {
-		if (!value) {
-			value = HTMLEditor.doc.getValue();
-		}
-
-		outputBody.html(value);
+		rightOutputFile(
+			HTMLEditor,
+			value,
+			{
+				fileName: 'output-html.html',
+				message: 'HTML saved!'
+			}
+		);
 	}
 
 	function updateJS(value) {
@@ -106,17 +138,14 @@ window.onload = function() {
 					$('#error-display').html(err);
 				}
 				else {
-					updateHTML();
-
-					outputJS = output.find('#customJS');
-
-					var clone = outputJS;
-
-					outputJS.remove();
-
-					outputHead.append(clone);
-
-					clone.html(value);
+					rightOutputFile(
+						JSEditor,
+						data,
+						{
+							fileName: 'output-js.js',
+							message: 'Javascript saved!'
+						}
+					);
 				}
 			}
 		);
@@ -146,7 +175,7 @@ window.onload = function() {
 		{
 			mode: 'javascript',
 			panel: JSPanel,
-			value: '// This is for Javascript'
+			value: '// This is for Javascript\n'
 		}
 	);
 
@@ -195,6 +224,13 @@ window.onload = function() {
 		'click',
 		function() {
 			gui.Window.get().showDevTools();
+		}
+	);
+
+	$('.reload').on(
+		'click',
+		function() {
+			gui.Window.get().reload();
 		}
 	);
 
