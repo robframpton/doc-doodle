@@ -99,20 +99,28 @@ window.onload = function() {
 	// Toolbar
 
 	var toggleBurger = $('.hamburger-toggle');
-	var list = $('.toggle-list');
-
-	toggleBurger.click(
-		function() {
-			list.toggleClass('hide');
-		}
-	);
+	var settings = $('.toggle-list');
 
 	var templatesToggle = $('#templatesToggle');
 	var templateList = $('.template-list');
 
+	toggleBurger.click(
+		function() {
+			settings.toggleClass('hide');
+
+			if (!templateList.hasClass('hide')) {
+				templateList.toggleClass('hide');
+			}
+		}
+	);
+
 	templatesToggle.click(
 		function() {
 			templateList.toggleClass('hide');
+
+			if (!settings.hasClass('hide')) {
+				settings.toggleClass('hide');
+			}
 		}
 	);
 
