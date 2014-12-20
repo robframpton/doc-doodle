@@ -6,9 +6,18 @@ var CWD = process.cwd();
 
 window.onload = function() {
 	var body = $('body'),
-		cssPanel = $('#cssPanel'),
-		htmlPanel = $('#htmlPanel'),
-		javascriptPanel = $('#javascriptPanel'),
+		CSSEditor,
+		CSSPanel = $('#CSSPanel'),
+		HTMLEditor,
+		HTMLPanel = $('#HTMLPanel'),
+		JSEditor;
+		JSPanel = $('#JSPanel'),
+		JSTemplate = 'try {<%= script %>} catch (e) {}',
+		output = $('#outputFrame').contents().find('HTML'),
+		outputBody = output.find('body'),
+		outputCSS = output.find('#customCSS'),
+		outputHead = output.find('head'),
+		outputJS = output.find('#customJS'),
 		win = $(window);
 
 	// Panel height
@@ -48,62 +57,132 @@ window.onload = function() {
 		$('.editor, #outputFrame').css('height', panelHeight + 'px');
 	}
 
+	function updateAll() {
+		updateHTML();
+		updateCSS();
+		updateJS();
+	}
+
+	function updateCSS(value) {
+		if (!value) {
+			value = CSSEditor.doc.getValue();
+		}
+
+		outputCSS.html(value);
+	}
+
+	function updateHTML(value) {
+		if (!value) {
+			value = HTMLEditor.doc.getValue();
+		}
+
+		outputBody.html(value);
+	}
+
+	function updateJS(value) {
+		if (!value) {
+			value = JSEditor.doc.getValue();
+		}
+
+		value = _.template(
+			JSTemplate,
+			{
+				script: value
+			}
+		);
+
+		compressor.compress(
+			value,
+			{
+				'line-break': 80,
+				charset: 'utf8',
+				nomunge: true,
+				type: 'js'
+			},
+			function(err, data) {
+				if (err) {
+					console.log(err);
+
+					$('#error-display').html(err);
+				}
+				else {
+					updateHTML();
+
+					outputJS = output.find('#customJS');
+
+					var clone = outputJS;
+
+					outputJS.remove();
+
+					outputHead.append(clone);
+
+					clone.html(value);
+				}
+			}
+		);
+	}
+
 	resizePanels();
 
 	win.on('resize', resizePanels);
 
-	var htmlEditor = createEditor(
+	HTMLEditor = createEditor(
 		{
 			mode: 'htmlmixed',
-			panel: htmlPanel,
-			value: '<div>html</div>'
+			panel: HTMLPanel,
+			value: '<div>HTML</div>'
 		}
 	);
 
-	var cssEditor = createEditor(
+	CSSEditor = createEditor(
 		{
 			mode: 'css',
-			panel: cssPanel,
+			panel: CSSPanel,
 			value: 'div {\n    background-color: red;\n    height: 100px;\n    width: 100px;\n}'
 		}
 	);
 
-	var javascriptEditor = createEditor(
+	JSEditor = createEditor(
 		{
 			mode: 'javascript',
-			panel: javascriptPanel,
+			panel: JSPanel,
 			value: '// This is for Javascript'
 		}
 	);
 
+	HTMLEditor.on(
+		'change',
+		function(editor) {
+			var value = editor.doc.getValue();
+
+			updateHTML(value);
+		}
+	);
+
+	CSSEditor.on(
+		'change',
+		function(editor) {
+			var value = editor.doc.getValue();
+
+			updateCSS(value);
+		}
+	);
+
+	JSEditor.on(
+		'change',
+		function(editor) {
+			var value = editor.doc.getValue();
+
+			updateJS(value);
+		}
+	);
+
+	updateAll();
+
 	$('#run').on(
 		'click',
 		function(event) {
-			var output = $('#outputFrame').contents().find('html');
-
-			output.find('body').html(htmlEditor.doc.getValue('\n'));
-
-			output.find('#customCSS').html(cssEditor.doc.getValue('\n'));
-
-			compressor.compress(
-				javascriptEditor.doc.getValue('\n'),
-				{
-					'line-break': 80,
-					charset: 'utf8',
-					nomunge: true,
-					type: 'js'
-				},
-				function(err, data) {
-					if (err) {
-						console.log(err);
-
-						$('#error-display').html(err);
-					}
-					else {
-						output.find('#customJS').html(data);
-					}
-				}
-			);
+			updateAll();
 		}
 	);
 
@@ -128,17 +207,17 @@ window.onload = function() {
 		function() {
 			fs.readFile(CWD + '/templates/onClick.html', {encoding: 'utf8'},function (err, data) {
 				if (err) throw err;
-					htmlEditor.doc.setValue(data);
+					HTMLEditor.doc.setValue(data);
 				}
 			);
 			fs.readFile(CWD + '/templates/onClick.css', {encoding: 'utf8'},function (err, data) {
 				if (err) throw err;
-					cssEditor.doc.setValue(data);
+					CSSEditor.doc.setValue(data);
 				}
 			);
 			fs.readFile(CWD + '/templates/onClick.js', {encoding: 'utf8'},function (err, data) {
 				if (err) throw err;
-					javascriptEditor.doc.setValue(data);
+					JSEditor.doc.setValue(data);
 				}
 			);
 
@@ -152,16 +231,16 @@ window.onload = function() {
 		function() {
 			fs.readFile(CWD + '/templates/firstParagraph.html', {encoding: 'utf8'},function (err, data) {
 				if (err) throw err;
-					htmlEditor.doc.setValue(data);
+					HTMLEditor.doc.setValue(data);
 				}
 			);
 			fs.readFile(CWD + '/templates/firstParagraph.css', {encoding: 'utf8'},function (err, data) {
 				if (err) throw err;
-					cssEditor.doc.setValue(data);
+					CSSEditor.doc.setValue(data);
 				}
 			);
 
-			javascriptEditor.doc.setValue('// Do something here');
+			JSEditor.doc.setValue('// Do something here');
 
 			templateList.toggleClass('hide');
 		}
