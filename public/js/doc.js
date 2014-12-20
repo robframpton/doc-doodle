@@ -14,9 +14,7 @@ window.onload = function() {
 	// Panel height
 
 	function resizePanels() {
-		var windowHeight = win.height();
-		var navbarHeight = $('.navbar').outerHeight() * 2;
-		var containerHeight = windowHeight - navbarHeight;
+		var containerHeight = win.height() - ($('.navbar').outerHeight() * 2);
 
 		var panelHeight = (containerHeight / 2) - 10;
 
@@ -97,11 +95,12 @@ window.onload = function() {
 
 	// Toolbar
 
-	var openDevTools = $('.open-dev-tools');
-
-	openDevTools.on('click', function() {
-		gui.Window.get().showDevTools();
-	});
+	$('.open-dev-tools').on(
+		'click',
+		function() {
+			gui.Window.get().showDevTools();
+		}
+	);
 
 	var toggleBurger = $('.hamburger-toggle');
 	var settings = $('.toggle-list');
