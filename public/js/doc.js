@@ -7,7 +7,6 @@ var CWD = process.cwd();
 window.onload = function() {
 	var body = $('body'),
 		cssPanel = $('#cssPanel'),
-		editors = {},
 		htmlPanel = $('#htmlPanel'),
 		javascriptPanel = $('#javascriptPanel'),
 		win = $(window);
@@ -64,10 +63,6 @@ window.onload = function() {
 			value: '// This is for Javascript'
 		}
 	);
-
-	editors.htmlEditor = htmlEditor;
-	editors.cssEditor = cssEditor;
-	editors.javascriptEditor = javascriptEditor;
 
 	var button = $('#run');
 
