@@ -67,11 +67,7 @@ window.onload = function() {
 
 	var button = $('#run');
 
-	var jsTemplateText = '<script type="text/javascript">try {<%= script %>}catch(error) {}</script>';
-	var cssTemplateText = '<style type="text/css"><%= css %></style>';
-
 	button.on('click', function(event) {
-		var styleTag = $(_.template(cssTemplateText, {css: cssEditor.doc.getValue('\n')}));
 		var output = $('#outputFrame').contents().find('html');
 		var outputHead = output.find('head');
 
