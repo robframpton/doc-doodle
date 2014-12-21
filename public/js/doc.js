@@ -22,7 +22,7 @@ window.onload = function() {
 		return CodeMirror(
 			config.panel.find('.editor')[0],
 			{
-				keymap: "sublime",
+				keyMap: "sublime",
 				lineNumbers: true,
 				mode:  config.mode,
 				theme: "ambiance",
