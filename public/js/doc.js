@@ -181,29 +181,29 @@ window.onload = function() {
 
 	HTMLEditor.on(
 		'change',
-		function(editor) {
+		_.debounce(function(editor) {
 			var value = editor.doc.getValue();
 
 			updateHTML(value);
-		}
+		}, 200)
 	);
 
 	CSSEditor.on(
 		'change',
-		function(editor) {
+		_.debounce(function(editor) {
 			var value = editor.doc.getValue();
 
 			updateCSS(value);
-		}
+		}, 200)
 	);
 
 	JSEditor.on(
 		'change',
-		function(editor) {
+		_.debounce(function(editor) {
 			var value = editor.doc.getValue();
 
 			updateJS(value);
-		}
+		}, 200)
 	);
 
 	updateAll();
