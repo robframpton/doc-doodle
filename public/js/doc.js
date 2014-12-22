@@ -10,7 +10,7 @@ window.onload = function() {
 		CSSPanel = $('#CSSPanel'),
 		HTMLEditor,
 		HTMLPanel = $('#HTMLPanel'),
-		JSEditor;
+		JSEditor,
 		JSPanel = $('#JSPanel'),
 		JSTemplate = 'window.onload = function() {try{<%= script %>} catch(e){}}',
 		templateList = $('.template-list'),
@@ -24,9 +24,12 @@ window.onload = function() {
 			{
 				keyMap: "sublime",
 				lineNumbers: true,
+				lineWrapping: true,
 				mode:  config.mode,
+				showCursorWhenSelecting: true,
+				styleActiveLine: true,
 				theme: "ambiance",
-				value: config.value
+				placeholder: config.placeholder
 			}
 		);
 	}
@@ -159,7 +162,7 @@ window.onload = function() {
 		{
 			mode: 'htmlmixed',
 			panel: HTMLPanel,
-			value: '<div>HTML</div>'
+			placeholder: 'HTML goes here...'
 		}
 	);
 
@@ -167,7 +170,7 @@ window.onload = function() {
 		{
 			mode: 'css',
 			panel: CSSPanel,
-			value: 'div {\n    background-color: red;\n    height: 100px;\n    width: 100px;\n}'
+			placeholder: 'CSS goes here...'
 		}
 	);
 
@@ -175,7 +178,7 @@ window.onload = function() {
 		{
 			mode: 'javascript',
 			panel: JSPanel,
-			value: '// This is for Javascript\n'
+			placeholder: 'Javascript goes here...'
 		}
 	);
 
