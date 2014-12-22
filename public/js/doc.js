@@ -12,7 +12,7 @@ window.onload = function() {
 		HTMLPanel = $('#HTMLPanel'),
 		JSEditor,
 		JSPanel = $('#JSPanel'),
-		JSTemplate = 'window.onload = function() {try{<%= script %>} catch(e){}}',
+		JSTemplate = 'window.onload=function(){try{<%= script %>}catch(e){}};',
 		templateList = $('.template-list'),
 		win = $(window);
 
@@ -119,13 +119,6 @@ window.onload = function() {
 			value = JSEditor.doc.getValue();
 		}
 
-		value = _.template(
-			JSTemplate,
-			{
-				script: value
-			}
-		);
-
 		compressor.compress(
 			value,
 			{
@@ -138,12 +131,19 @@ window.onload = function() {
 				if (err) {
 					console.log(err);
 
-					$('#error-display').html(err);
+					$('#error-display').append(err);
 				}
 				else {
+					value = _.template(
+						JSTemplate,
+						{
+							script: data
+						}
+					);
+
 					rightOutputFile(
 						JSEditor,
-						data,
+						value,
 						{
 							fileName: 'output-js.js',
 							message: 'Javascript saved!'
