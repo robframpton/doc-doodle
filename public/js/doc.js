@@ -38,6 +38,18 @@ window.onload = function() {
 		toggler.on(
 			'click',
 			function(event) {
+				if (!content.hasClass('hide')) {
+					return content.toggleClass('hide');
+				}
+
+				$('.dropdown-list').each(
+					function() {
+						if (!$(this).hasClass('hide')) {
+							$(this).addClass('hide');
+						}
+					}
+				);
+
 				content.toggleClass('hide');
 
 				toggler.toggleClass('open', !content.hasClass('hide'));
