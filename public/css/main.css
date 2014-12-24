@@ -65,6 +65,10 @@ body {
 	padding: 13px 15px 12px;
 }
 
+#templatesToggle {
+	font-size: 20px;
+}
+
 .template-list, .toggle-list {
 	padding: 15px 0;
 	top: 51px;

@@ -146,8 +146,6 @@ window.onload = function() {
 			function(err, data) {
 				if (err) {
 					console.log(err);
-
-					$('#error-display').html(err);
 				}
 				else {
 					rightOutputFile(
