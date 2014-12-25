@@ -41,6 +41,18 @@ window.onload = function() {
 		toggler.on(
 			'click',
 			function(event) {
+				if (!content.hasClass('hide')) {
+					return content.toggleClass('hide');
+				}
+
+				$('.dropdown-list').each(
+					function() {
+						if (!$(this).hasClass('hide')) {
+							$(this).addClass('hide');
+						}
+					}
+				);
+
 				content.toggleClass('hide');
 
 				toggler.toggleClass('open', !content.hasClass('hide'));
@@ -130,8 +142,6 @@ window.onload = function() {
 			function(err, data) {
 				if (err) {
 					console.log(err);
-
-					$('#error-display').append(err);
 				}
 				else {
 					value = _.template(
