@@ -70,7 +70,7 @@ window.onload = function() {
 		}
 
 		fs.writeFile(
-			'output/' + config.fileName,
+			'output/output-fragments/' + config.fileName,
 			value,
 			function (err) {
 				if (!err) {
@@ -97,7 +97,7 @@ window.onload = function() {
 			CSSEditor,
 			value,
 			{
-				fileName: 'output-css.css',
+				fileName: 'css.css',
 				message: 'CSS saved!'
 			}
 		);
@@ -108,7 +108,7 @@ window.onload = function() {
 			HTMLEditor,
 			value,
 			{
-				fileName: 'output-html.html',
+				fileName: 'html.html',
 				message: 'HTML saved!'
 			}
 		);
@@ -145,7 +145,7 @@ window.onload = function() {
 						JSEditor,
 						value,
 						{
-							fileName: 'output-js.js',
+							fileName: 'js.js',
 							message: 'Javascript saved!'
 						}
 					);
