@@ -221,13 +221,6 @@ window.onload = function() {
 
 	updateAll();
 
-	$('#run').on(
-		'click',
-		function(event) {
-			updateAll();
-		}
-	);
-
 	createToggler('#menuToggle', '.toggle-list');
 	createToggler('#templatesToggle', '.template-list');
 
