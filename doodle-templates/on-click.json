@@ -1,0 +1,1 @@
+{"css":".my-container {\n\n}\n\n.output-container {\n\n}","html":"<div class=\"my-container\">\n\t<button id=\"clickMe\">Click Me!</button>\n\n\t<div class=\"output-container\">\n\t</div>\n</div>","js":"var button = $('#clickMe');\nvar outputContainer = $('.output-container');\n\nbutton.click(\n\tfunction() {\n\t\t// Do something here\n\t}\n);"}
