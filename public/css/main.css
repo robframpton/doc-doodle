@@ -131,6 +131,20 @@ body {
 	padding-bottom: 10px;
 }
 
+.doodle-list {
+	color: #BBB;
+	list-style: none;
+	padding: 0;
+}
+
+.doodle-list li {
+	cursor: pointer;
+}
+
+.doodle-list li:hover {
+	color: #EEE;
+}
+
 .template-list, .toggle-list {
 	padding: 15px 0;
 	top: 51px;

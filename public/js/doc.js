@@ -60,6 +60,40 @@ window.onload = function() {
 		);
 	}
 
+	function populateEditors(data) {
+		if (data.html) {
+			HTMLEditor.doc.setValue(data.html);
+		}
+
+		if (data.css) {
+			CSSEditor.doc.setValue(data.css);
+		}
+
+		if (data.js) {
+			JSEditor.doc.setValue(data.js);
+		}
+	}
+
+	function renderDoodleList() {
+		fs.readdir(
+			'doodles/',
+			function(err, files) {
+				if (files.length) {
+					var buffer = _.map(
+						files,
+						function(item, index) {
+							var doodleName = item.match(/(.*)\./);
+
+							return '<li class="doodle" data-filename="' + item + '">' + doodleName[1] + '</li>';
+						}
+					);
+
+					$('#loadDoodle .doodle-list').html(buffer.join(''));
+				}
+			}
+		);
+	}
+
 	function resizePanels() {
 		var containerHeight = win.height() - ($('.navbar').outerHeight() * 2);
 
@@ -241,6 +275,7 @@ window.onload = function() {
 	);
 
 	updateAll();
+	renderDoodleList();
 
 	createToggler('#menuToggle', '.toggle-list');
 
@@ -267,6 +302,11 @@ window.onload = function() {
 
 			if (name) {
 				saveDoodle(name);
+
+				renderDoodleList();
+			}
+			else {
+				alert('Please enter a name for your Doodle.');
 			}
 		}
 	);
@@ -275,6 +315,30 @@ window.onload = function() {
 		'click',
 		function() {
 			body.toggleClass('doodles-menu-open');
+		}
+	);
+
+	$('#loadDoodle .doodle-list').on(
+		'click',
+		'li',
+		function(event) {
+			var currentTarget = $(event.currentTarget);
+
+			var fileName = currentTarget.data('filename');
+
+			fs.readFile(
+				CWD + '/doodles/' + fileName,
+				{
+					encoding: 'utf8'
+				},
+				function(err, data) {
+					if (err) throw err;
+
+					data = JSON.parse(data);
+
+					populateEditors(data);
+				}
+			);
 		}
 	);
 
