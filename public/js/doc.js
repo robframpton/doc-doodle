@@ -18,7 +18,7 @@ window.onload = function() {
 
 	// Templates
 
-	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>"><%= doodleName %></li>',
+	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>" data-type="<%= type %>"><%= doodleName %></li>',
 		JSTemplate = 'window.onload=function(){try{<%= script %>}catch(e){}};';
 
 	function createEditor(config) {
@@ -105,7 +105,8 @@ window.onload = function() {
 								template,
 								{
 									doodleName: doodleName[1],
-									fileName: item
+									fileName: item,
+									type: type
 								}
 							);
 						}
@@ -326,79 +327,31 @@ window.onload = function() {
 		}
 	);
 
-	$('#loadDoodle .doodle-list').on(
+	$('#loadDoodle .doodle-list, #doodleTemplates .doodle-template-list').on(
 		'click',
 		'li',
 		function(event) {
-			var currentTarget = $(event.currentTarget);
+			if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
+				var currentTarget = $(event.currentTarget);
 
-			var fileName = currentTarget.data('filename');
+				var fileName = currentTarget.data('filename');
 
-			fs.readFile(
-				CWD + '/doodles/' + fileName,
-				{
-					encoding: 'utf8'
-				},
-				function(err, data) {
-					if (err) throw err;
+				fs.readFile(
+					CWD + '/' + currentTarget.data('type') + '/' + fileName,
+					{
+						encoding: 'utf8'
+					},
+					function(err, data) {
+						if (err) throw err;
 
-					data = JSON.parse(data);
+						data = JSON.parse(data);
 
-					populateEditors(data);
-				}
-			);
+						populateEditors(data);
+					}
+				);
+			}
 		}
 	);
-
-	// Template functions
-	var tempMessage = 'Are you sure you want to change markup? All data will be lost.';
-
-	var clickableButton = $('#clickButton');
-
-	clickableButton.click(
-		function() {
-			fs.readFile(CWD + '/templates/onClick.html', {encoding: 'utf8'},function (err, data) {
-				if (err) throw err;
-					HTMLEditor.doc.setValue(data);
-				}
-			);
-			fs.readFile(CWD + '/templates/onClick.css', {encoding: 'utf8'},function (err, data) {
-				if (err) throw err;
-					CSSEditor.doc.setValue(data);
-				}
-			);
-			fs.readFile(CWD + '/templates/onClick.js', {encoding: 'utf8'},function (err, data) {
-				if (err) throw err;
-					JSEditor.doc.setValue(data);
-				}
-			);
-
-			templateList.toggleClass('hide');
-		}
-	);
-
-	var firstParagraph = $('#firstParagraph');
-
-	firstParagraph.click(
-		function() {
-			fs.readFile(CWD + '/templates/firstParagraph.html', {encoding: 'utf8'},function (err, data) {
-				if (err) throw err;
-					HTMLEditor.doc.setValue(data);
-				}
-			);
-			fs.readFile(CWD + '/templates/firstParagraph.css', {encoding: 'utf8'},function (err, data) {
-				if (err) throw err;
-					CSSEditor.doc.setValue(data);
-				}
-			);
-
-			JSEditor.doc.setValue('// Do something here');
-
-			templateList.toggleClass('hide');
-		}
-	);
-
-	// Options toggle
 
 	$('.options-toggle').on(
 		'click',
