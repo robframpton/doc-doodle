@@ -96,6 +96,27 @@ window.onload = function() {
 		);
 	}
 
+	function saveDoodle(name) {
+		var data = {
+			css: CSSEditor.doc.getValue(),
+			html: HTMLEditor.doc.getValue(),
+			js: JSEditor.doc.getValue()
+		};
+
+		fs.writeFile(
+			'doodles/' + name + '.json',
+			JSON.stringify(data),
+			function (err) {
+				if (err) {
+					console.log(err);
+				}
+				else {
+					console.log(name + ' has been saved.');
+				}
+			}
+		);
+	}
+
 	var refreshContent = _.debounce(refreshIframe, 200);
 
 	function updateAll() {
@@ -222,7 +243,6 @@ window.onload = function() {
 	updateAll();
 
 	createToggler('#menuToggle', '.toggle-list');
-	createToggler('#templatesToggle', '.template-list');
 
 	// Toolbar
 
@@ -237,6 +257,24 @@ window.onload = function() {
 		'click',
 		function() {
 			gui.Window.get().reload();
+		}
+	);
+
+	$('.save-doodle').on(
+		'click',
+		function() {
+			var name = $('#newDoodleName').val();
+
+			if (name) {
+				saveDoodle(name);
+			}
+		}
+	);
+
+	$('#doodlesToggle').on(
+		'click',
+		function() {
+			body.toggleClass('doodles-menu-open');
 		}
 	);
 

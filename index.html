@@ -24,7 +24,7 @@
 		<div class="navbar navbar-default" role="navigation">
 			<ul class="nav navbar-nav">
 				<li class="pull-left">
-					<a href="javascript:;" id="templatesToggle">Samples</a>
+					<a href="javascript:;" id="doodlesToggle">Doodles</a>
 				</li>
 
 				<img class="dr-doodle-icon" src="lib/css/drdoodle-270x40.svg" alt="Doctor Doodle">
@@ -56,6 +56,24 @@
 				<li><a href="javascript:;" id="clickButton">Clickable Button</a></li>
 				<li><a href="javascript:;" id="firstParagraph">First Paragraph</a></li>
 			</ul>
+		</div>
+
+		<div id="doodlesMenu">
+			<div class="doodles-menu-content">
+				<div class="doodles-section" id="saveDoodle">
+					<div class="section-title">
+						Save Doodle
+					</div>
+					<label for="newDoodleName">Name:</label>
+					<input type="text" id="newDoodleName" />
+					<span class="save-doodle"><i class="fa fa-save"></i></span>
+				</div>
+				<div class="doodles-section" id="loadDoodle">
+					<div class="section-title">
+						Load Doodle
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div class="container-fluid" id="wrapper">
@@ -104,6 +122,8 @@
 					<div id="error-display"></div>
 				</div>
 			</div>
+
+			<div id="wrapperOverlay"></div>
 		</div>
 	</body>
 </html>
