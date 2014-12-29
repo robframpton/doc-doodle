@@ -135,17 +135,17 @@ body {
 	padding-bottom: 10px;
 }
 
-.doodle-list {
+.doodle-list, .doodle-template-list {
 	color: #BBB;
 	list-style: none;
 	padding: 0;
 }
 
-.doodle-list li {
+.doodle-list li, .doodle-template-list li {
 	cursor: pointer;
 }
 
-.doodle-list li:hover {
+.doodle-list li:hover, .doodle-template-list li:hover {
 	color: #EEE;
 }
 

@@ -8,15 +8,18 @@ window.onload = function() {
 	var body = $('body'),
 		CSSEditor,
 		CSSPanel = $('#CSSPanel'),
+		doodlesMenu = $('#doodlesMenu'),
 		HTMLEditor,
 		HTMLPanel = $('#HTMLPanel'),
 		JSEditor,
 		JSPanel = $('#JSPanel'),
-		JSTemplate = 'window.onload=function(){try{<%= script %>}catch(e){}};',
 		templateList = $('.template-list'),
 		win = $(window);
 
-	// Panel height
+	// Templates
+
+	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>"><%= doodleName %></li>',
+		JSTemplate = 'window.onload=function(){try{<%= script %>}catch(e){}};';
 
 	function createEditor(config) {
 		var editor = CodeMirror(
@@ -88,9 +91,9 @@ window.onload = function() {
 		}
 	}
 
-	function renderDoodleList() {
+	function renderDoodleList(type, template, list) {
 		fs.readdir(
-			'doodles/',
+			type + '/',
 			function(err, files) {
 				if (files.length) {
 					var buffer = _.map(
@@ -98,14 +101,28 @@ window.onload = function() {
 						function(item, index) {
 							var doodleName = item.match(/(.*)\./);
 
-							return '<li class="doodle" data-filename="' + item + '">' + doodleName[1] + '</li>';
+							return _.template(
+								template,
+								{
+									doodleName: doodleName[1],
+									fileName: item
+								}
+							);
 						}
 					);
 
-					$('#loadDoodle .doodle-list').html(buffer.join(''));
+					doodlesMenu.find(list).html(buffer.join(''));
 				}
 			}
 		);
+	}
+
+	function renderDoodleTemplateList() {
+		renderDoodleList('doodle-templates', doodleListTemplate, '.doodle-template-list');
+	}
+
+	function renderSavedDoodleList() {
+		renderDoodleList('doodles', doodleListTemplate, '.doodle-list');
 	}
 
 	function resizePanels() {
@@ -265,7 +282,8 @@ window.onload = function() {
 	);
 
 	updateAll();
-	renderDoodleList();
+	renderSavedDoodleList();
+	renderDoodleTemplateList();
 
 	createToggler('#menuToggle', '.toggle-list');
 
@@ -293,7 +311,7 @@ window.onload = function() {
 			if (name) {
 				saveDoodle(name);
 
-				renderDoodleList();
+				renderSavedDoodleList();
 			}
 			else {
 				alert('Please enter a name for your Doodle.');
