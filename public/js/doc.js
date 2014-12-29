@@ -19,7 +19,7 @@ window.onload = function() {
 	// Panel height
 
 	function createEditor(config) {
-		return CodeMirror(
+		var editor = CodeMirror(
 			config.panel.find('.editor')[0],
 			{
 				keyMap: "sublime",
@@ -32,6 +32,20 @@ window.onload = function() {
 				placeholder: config.placeholder
 			}
 		);
+
+		editor.on(
+			'change',
+			_.debounce(
+				function(editor) {
+					var value = editor.doc.getValue();
+
+					config.changeFn(value);
+				},
+				200
+			)
+		);
+
+		return editor;
 	}
 
 	function createToggler(toggler, content) {
@@ -225,6 +239,7 @@ window.onload = function() {
 
 	HTMLEditor = createEditor(
 		{
+			changeFn: updateHTML,
 			mode: 'htmlmixed',
 			panel: HTMLPanel,
 			placeholder: 'HTML goes here...'
@@ -233,6 +248,7 @@ window.onload = function() {
 
 	CSSEditor = createEditor(
 		{
+			changeFn: updateCSS,
 			mode: 'css',
 			panel: CSSPanel,
 			placeholder: 'CSS goes here...'
@@ -241,37 +257,11 @@ window.onload = function() {
 
 	JSEditor = createEditor(
 		{
+			changeFn: updateJS,
 			mode: 'javascript',
 			panel: JSPanel,
 			placeholder: 'Javascript goes here...'
 		}
-	);
-
-	HTMLEditor.on(
-		'change',
-		_.debounce(function(editor) {
-			var value = editor.doc.getValue();
-
-			updateHTML(value);
-		}, 200)
-	);
-
-	CSSEditor.on(
-		'change',
-		_.debounce(function(editor) {
-			var value = editor.doc.getValue();
-
-			updateCSS(value);
-		}, 200)
-	);
-
-	JSEditor.on(
-		'change',
-		_.debounce(function(editor) {
-			var value = editor.doc.getValue();
-
-			updateJS(value);
-		}, 200)
 	);
 
 	updateAll();
