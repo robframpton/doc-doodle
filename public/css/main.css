@@ -125,6 +125,10 @@ body {
 	padding: 4px 12px;
 }
 
+.save-doodle:hover {
+	text-shadow: 0px 0px 6px #FCB716;
+}
+
 .doodles-menu-content .section-title {
 	color: #E18728;
 	font-size: 22px;
