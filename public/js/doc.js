@@ -95,24 +95,38 @@ window.onload = function() {
 		fs.readdir(
 			type + '/',
 			function(err, files) {
-				if (files.length) {
-					var buffer = _.map(
-						files,
-						function(item, index) {
-							var doodleName = item.match(/(.*)\./);
+				if (!err) {
+					if (files.length) {
+						var buffer = _.map(
+							files,
+							function(item, index) {
+								var doodleName = item.match(/(.*)\./);
 
-							return _.template(
-								template,
-								{
-									doodleName: doodleName[1],
-									fileName: item,
-									type: type
-								}
-							);
-						}
-					);
+								return _.template(
+									template,
+									{
+										doodleName: doodleName[1],
+										fileName: item,
+										type: type
+									}
+								);
+							}
+						);
 
-					doodlesMenu.find(list).html(buffer.join(''));
+						doodlesMenu.find(list).html(buffer.join(''));
+					}
+				}
+				else {
+					if (err.code === "ENOENT") {
+						fs.mkdir(type + '/', function(err) {
+							if (!err) {
+								renderDoodleList(type, template, list);
+							}
+						});
+					}
+					else {
+						console.log('err: ', err);
+					}
 				}
 			}
 		);
