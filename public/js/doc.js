@@ -51,32 +51,6 @@ window.onload = function() {
 		return editor;
 	}
 
-	function createToggler(toggler, content) {
-		toggler = $(toggler);
-		content = $(content);
-
-		toggler.on(
-			'click',
-			function(event) {
-				if (!content.hasClass('hide')) {
-					return content.toggleClass('hide');
-				}
-
-				$('.dropdown-list').each(
-					function() {
-						if (!$(this).hasClass('hide')) {
-							$(this).addClass('hide');
-						}
-					}
-				);
-
-				content.toggleClass('hide');
-
-				toggler.toggleClass('open', !content.hasClass('hide'));
-			}
-		);
-	}
-
 	function populateEditors(data) {
 		if (data.html) {
 			HTMLEditor.doc.setValue(data.html);
@@ -303,8 +277,6 @@ window.onload = function() {
 	updateAll();
 	renderSavedDoodleList();
 	renderDoodleTemplateList();
-
-	createToggler('#menuToggle', '.toggle-list');
 
 	// Toolbar
 
