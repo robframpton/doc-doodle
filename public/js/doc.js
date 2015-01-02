@@ -95,7 +95,7 @@ window.onload = function() {
 		fs.readdir(
 			type + '/',
 			function(err, files) {
-				if (files.length) {
+				if (files) {
 					var buffer = _.map(
 						files,
 						function(item, index) {
