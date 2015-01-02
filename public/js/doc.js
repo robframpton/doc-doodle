@@ -18,7 +18,7 @@ window.onload = function() {
 
 	// Templates
 
-	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>" data-type="<%= type %>"><%= doodleName %></li>',
+	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>" data-type="<%= type %>"><span class="doodle-name"><%= doodleName %></span><i class="pull-right fa fa-trash delete-doodle"></i></li>',
 		JSTemplate = 'window.onload=function(){try{<%= script %>}catch(e){}};';
 
 	function createEditor(config) {
@@ -325,10 +325,10 @@ window.onload = function() {
 
 	$('#loadDoodle .doodle-list, #doodleTemplates .doodle-template-list').on(
 		'click',
-		'li',
+		'.doodle-name',
 		function(event) {
 			if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
-				var currentTarget = $(event.currentTarget);
+				var currentTarget = $(event.currentTarget).parents('.doodle');
 
 				var fileName = currentTarget.data('filename');
 
@@ -343,6 +343,29 @@ window.onload = function() {
 						data = JSON.parse(data);
 
 						populateEditors(data);
+					}
+				);
+			}
+		}
+	);
+
+	$('#loadDoodle .doodle-list, #doodleTemplates .doodle-template-list').on(
+		'click',
+		'.delete-doodle',
+		function(event) {
+			if (confirm('Are you sure you want to delete this Doodle?')) {
+				var currentTarget = $(event.currentTarget).parents('.doodle');
+
+				var fileName = currentTarget.data('filename');
+
+				fs.unlink(
+					CWD + '/' + currentTarget.data('type') + '/' + fileName,
+					function(err, data) {
+						if (err) throw err;
+
+						console.log('Successfully Deleted ' + fileName);
+
+						renderSavedDoodleList();
 					}
 				);
 			}
