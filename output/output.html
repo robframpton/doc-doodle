@@ -8,6 +8,8 @@
 		<link id="customHTML" rel="import" href="./output-fragments/html.html"/>
 
 		<script type="text/javascript">
+			var $ = require('../lib/js/jquery-2.1.3.min.js');
+
 			$(document).ready(function() {
 				var htmlContent = document.querySelector('#customHTML').import.querySelector('body').innerHTML;
 				var outputBody = $('#outputBody');

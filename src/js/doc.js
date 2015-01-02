@@ -1,8 +1,11 @@
 var _ = require('lodash');
 var fs = require('fs');
 var compressor = require('yuicompressor');
+var ipc = require('ipc');
 
 var CWD = process.cwd();
+
+var $ = require('../lib/js/jquery-2.1.3.min.js');
 
 window.onload = function() {
 	var body = $('body'),
@@ -15,6 +18,7 @@ window.onload = function() {
 		JSPanel = $('#JSPanel'),
 		templateList = $('.template-list'),
 		win = $(window);
+
 
 	// Templates
 
@@ -307,14 +311,14 @@ window.onload = function() {
 	$('.open-dev-tools').on(
 		'click',
 		function() {
-			gui.Window.get().showDevTools();
+			ipc.send('devTools');
 		}
 	);
 
 	$('.reload').on(
 		'click',
 		function() {
-			gui.Window.get().reload();
+			ipc.send('refresh');
 		}
 	);
 
@@ -345,7 +349,8 @@ window.onload = function() {
 		'click',
 		'li',
 		function(event) {
-			if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
+			// if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
+			if (true) {
 				var currentTarget = $(event.currentTarget);
 
 				var fileName = currentTarget.data('filename');
