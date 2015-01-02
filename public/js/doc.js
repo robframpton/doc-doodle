@@ -169,18 +169,36 @@ window.onload = function() {
 			js: JSEditor.doc.getValue()
 		};
 
-		fs.writeFile(
-			'doodles/' + name + '.json',
-			JSON.stringify(data),
-			function (err) {
-				if (err) {
-					console.log(err);
+		var writeFile = function() {
+			fs.writeFile(
+				'doodles/' + name + '.json',
+				JSON.stringify(data),
+				function (err) {
+					if (err) {
+						console.log(err);
+					}
+					else {
+						console.log(name + ' has been saved.');
+					}
 				}
-				else {
-					console.log(name + ' has been saved.');
+			);
+		};
+
+		if (!fs.existsSync('doodles')) {
+			fs.mkdir(
+				'doodles',
+				function (err) {
+					if (err) {
+						console.log(err);
+					}
+					else {
+						console.log('Doodles Directory Created');
+					}
 				}
-			}
-		);
+			);
+		}
+
+		writeFile();
 	}
 
 	var refreshContent = _.debounce(refreshIframe, 200);
