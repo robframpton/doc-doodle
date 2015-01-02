@@ -18,7 +18,7 @@ window.onload = function() {
 
 	// Templates
 
-	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>" data-type="<%= type %>"><%= doodleName %></li>',
+	var doodleListTemplate = '<li class="doodle" data-filename="<%= fileName %>" data-type="<%= type %>"><span class="doodle-name"><%= doodleName %></span><i class="pull-right fa fa-trash delete-doodle"></i></li>',
 		JSTemplate = 'window.onload=function(){try{<%= script %>}catch(e){}};';
 
 	function createEditor(config) {
@@ -51,32 +51,6 @@ window.onload = function() {
 		return editor;
 	}
 
-	function createToggler(toggler, content) {
-		toggler = $(toggler);
-		content = $(content);
-
-		toggler.on(
-			'click',
-			function(event) {
-				if (!content.hasClass('hide')) {
-					return content.toggleClass('hide');
-				}
-
-				$('.dropdown-list').each(
-					function() {
-						if (!$(this).hasClass('hide')) {
-							$(this).addClass('hide');
-						}
-					}
-				);
-
-				content.toggleClass('hide');
-
-				toggler.toggleClass('open', !content.hasClass('hide'));
-			}
-		);
-	}
-
 	function populateEditors(data) {
 		if (data.html) {
 			HTMLEditor.doc.setValue(data.html);
@@ -95,7 +69,7 @@ window.onload = function() {
 		fs.readdir(
 			type + '/',
 			function(err, files) {
-				if (files.length) {
+				if (files) {
 					var buffer = _.map(
 						files,
 						function(item, index) {
@@ -169,18 +143,36 @@ window.onload = function() {
 			js: JSEditor.doc.getValue()
 		};
 
-		fs.writeFile(
-			'doodles/' + name + '.json',
-			JSON.stringify(data),
-			function (err) {
-				if (err) {
-					console.log(err);
+		var writeFile = function() {
+			fs.writeFile(
+				'doodles/' + name + '.json',
+				JSON.stringify(data),
+				function (err) {
+					if (err) {
+						console.log(err);
+					}
+					else {
+						console.log(name + ' has been saved.');
+					}
 				}
-				else {
-					console.log(name + ' has been saved.');
+			);
+		};
+
+		if (!fs.existsSync('doodles')) {
+			fs.mkdir(
+				'doodles',
+				function (err) {
+					if (err) {
+						console.log(err);
+					}
+					else {
+						console.log('Doodles Directory Created');
+					}
 				}
-			}
-		);
+			);
+		}
+
+		writeFile();
 	}
 
 	var refreshContent = _.debounce(refreshIframe, 200);
@@ -286,8 +278,6 @@ window.onload = function() {
 	renderSavedDoodleList();
 	renderDoodleTemplateList();
 
-	createToggler('#menuToggle', '.toggle-list');
-
 	// Toolbar
 
 	$('.open-dev-tools').on(
@@ -300,7 +290,9 @@ window.onload = function() {
 	$('.reload').on(
 		'click',
 		function() {
-			gui.Window.get().reload();
+			if (confirm('Reload page? All unsaved work will be lost.')) {
+				gui.Window.get().reload();
+			}
 		}
 	);
 
@@ -308,6 +300,10 @@ window.onload = function() {
 		'click',
 		function() {
 			var name = $('#newDoodleName').val();
+
+			if (fs.existsSync('doodles/' + name + '.json') && !confirm('A file with this name already exists. Do you want to overwrite?')) {
+				return;
+			}
 
 			if (name) {
 				saveDoodle(name);
@@ -329,10 +325,10 @@ window.onload = function() {
 
 	$('#loadDoodle .doodle-list, #doodleTemplates .doodle-template-list').on(
 		'click',
-		'li',
+		'.doodle-name',
 		function(event) {
 			if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
-				var currentTarget = $(event.currentTarget);
+				var currentTarget = $(event.currentTarget).parents('.doodle');
 
 				var fileName = currentTarget.data('filename');
 
@@ -347,6 +343,29 @@ window.onload = function() {
 						data = JSON.parse(data);
 
 						populateEditors(data);
+					}
+				);
+			}
+		}
+	);
+
+	$('#loadDoodle .doodle-list, #doodleTemplates .doodle-template-list').on(
+		'click',
+		'.delete-doodle',
+		function(event) {
+			if (confirm('Are you sure you want to delete this Doodle?')) {
+				var currentTarget = $(event.currentTarget).parents('.doodle');
+
+				var fileName = currentTarget.data('filename');
+
+				fs.unlink(
+					CWD + '/' + currentTarget.data('type') + '/' + fileName,
+					function(err, data) {
+						if (err) throw err;
+
+						console.log('Successfully Deleted ' + fileName);
+
+						renderSavedDoodleList();
 					}
 				);
 			}
