@@ -290,7 +290,9 @@ window.onload = function() {
 	$('.reload').on(
 		'click',
 		function() {
-			gui.Window.get().reload();
+			if (confirm('Reload page? All unsaved work will be lost.')) {
+				gui.Window.get().reload();
+			}
 		}
 	);
 
