@@ -327,6 +327,10 @@ window.onload = function() {
 		function() {
 			var name = $('#newDoodleName').val();
 
+			if (fs.existsSync('doodles/' + name + '.json') && !confirm('A file with this name already exists. Do you want to overwrite?')) {
+				return;
+			}
+
 			if (name) {
 				saveDoodle(name);
 
