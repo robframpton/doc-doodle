@@ -88,32 +88,6 @@ window.onload = function() {
 		return editor;
 	}
 
-	function createToggler(toggler, content) {
-		toggler = $(toggler);
-		content = $(content);
-
-		toggler.on(
-			'click',
-			function(event) {
-				if (!content.hasClass('hide')) {
-					return content.toggleClass('hide');
-				}
-
-				$('.dropdown-list').each(
-					function() {
-						if (!$(this).hasClass('hide')) {
-							$(this).addClass('hide');
-						}
-					}
-				);
-
-				content.toggleClass('hide');
-
-				toggler.toggleClass('open', !content.hasClass('hide'));
-			}
-		);
-	}
-
 	function populateEditors(data) {
 		if (data.html) {
 			HTMLEditor.doc.setValue(data.html);
@@ -337,9 +311,7 @@ window.onload = function() {
 	renderSavedDoodleList();
 	renderDoodleTemplateList();
 
-	createToggler('#menuToggle', '.toggle-list');
-
-	// Toolbar
+	// Toolbar Actions
 
 	$('.open-dev-tools').on(
 		'click',
@@ -352,6 +324,15 @@ window.onload = function() {
 		'click',
 		function() {
 			ipc.send('reload');
+		}
+	);
+
+	// Save / Load Menu
+
+	$('#doodlesToggle').on(
+		'click',
+		function() {
+			body.toggleClass('doodles-menu-open');
 		}
 	);
 
@@ -368,13 +349,6 @@ window.onload = function() {
 			else {
 				alert('Please enter a name for your Doodle.');
 			}
-		}
-	);
-
-	$('#doodlesToggle').on(
-		'click',
-		function() {
-			body.toggleClass('doodles-menu-open');
 		}
 	);
 
@@ -414,6 +388,8 @@ window.onload = function() {
 			);
 		}
 	});
+
+	// Editor options overlay toggle
 
 	$('.options-toggle').on(
 		'click',
