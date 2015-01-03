@@ -2,13 +2,16 @@ var _ = require('lodash');
 var fs = require('fs');
 var compressor = require('yuicompressor');
 var ipc = require('ipc');
+var remote = require('remote');
+
+var Menu = remote.require('menu');
+var MenuItem = remote.require('menu-item');
 
 var CWD = process.cwd();
 
-var $ = require('../lib/js/jquery-2.1.3.min.js');
-
 window.onload = function() {
-	var body = $('body'),
+	var $ = require('../lib/js/jquery-2.1.3.min.js'),
+		body = $('body'),
 		CSSEditor,
 		CSSPanel = $('#CSSPanel'),
 		doodlesMenu = $('#doodlesMenu'),
@@ -17,8 +20,38 @@ window.onload = function() {
 		JSEditor,
 		JSPanel = $('#JSPanel'),
 		templateList = $('.template-list'),
-		win = $(window);
+		win = $(window),
+		menu = new Menu(),
+		mouseX,
+		mouseY;
 
+
+	// Context Menu
+
+	menu.append(new MenuItem(
+		{
+			label: 'Reload App',
+			click: function() {
+				ipc.send('reload');
+			}
+		}
+	));
+
+	menu.append(new MenuItem(
+		{
+			label: 'Inspect Element',
+			click: function() {
+				ipc.send('inspectElement', mouseX, mouseY);
+			}
+		}
+	));
+
+	window.addEventListener('contextmenu', function (e) {
+		e.preventDefault();
+		mouseX = e.x;
+		mouseY = e.y;
+		menu.popup(remote.getCurrentWindow());
+	}, false);
 
 	// Templates
 
@@ -318,7 +351,7 @@ window.onload = function() {
 	$('.reload').on(
 		'click',
 		function() {
-			ipc.send('refresh');
+			ipc.send('reload');
 		}
 	);
 
@@ -349,28 +382,38 @@ window.onload = function() {
 		'click',
 		'li',
 		function(event) {
-			// if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
-			if (true) {
-				var currentTarget = $(event.currentTarget);
+			var options = {
+				message: 'Are you sure you want to load this Doodle?',
+				detail: 'All current data will be lost.',
+				buttons: ['Cancel', 'Load']
+			};
 
-				var fileName = currentTarget.data('filename');
+			var fileName = $(event.currentTarget).data('filename');
+			var fileType = $(event.currentTarget).data('type');
 
-				fs.readFile(
-					CWD + '/' + currentTarget.data('type') + '/' + fileName,
-					{
-						encoding: 'utf8'
-					},
-					function(err, data) {
-						if (err) throw err;
-
-						data = JSON.parse(data);
-
-						populateEditors(data);
-					}
-				);
-			}
+			ipc.send('confirmLoad', fileName, fileType, options);
 		}
 	);
+
+	ipc.on('confirmLoadResponse', function(load, fileName, fileType) {
+		if (load) {
+			fs.readFile(
+				CWD + '/' + fileType + '/' + fileName,
+				{
+					encoding: 'utf8'
+				},
+				function(err, data) {
+					if (err) throw err;
+
+					data = JSON.parse(data);
+
+					populateEditors(data);
+
+					body.removeClass('doodles-menu-open');
+				}
+			);
+		}
+	});
 
 	$('.options-toggle').on(
 		'click',
