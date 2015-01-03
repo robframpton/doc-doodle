@@ -1,11 +1,17 @@
 var _ = require('lodash');
 var fs = require('fs');
 var compressor = require('yuicompressor');
+var ipc = require('ipc');
+var remote = require('remote');
+
+var Menu = remote.require('menu');
+var MenuItem = remote.require('menu-item');
 
 var CWD = process.cwd();
 
 window.onload = function() {
-	var body = $('body'),
+	var $ = require('../lib/js/jquery-2.1.3.min.js'),
+		body = $('body'),
 		CSSEditor,
 		CSSPanel = $('#CSSPanel'),
 		doodlesMenu = $('#doodlesMenu'),
@@ -14,7 +20,38 @@ window.onload = function() {
 		JSEditor,
 		JSPanel = $('#JSPanel'),
 		templateList = $('.template-list'),
-		win = $(window);
+		win = $(window),
+		menu = new Menu(),
+		mouseX,
+		mouseY;
+
+
+	// Context Menu
+
+	menu.append(new MenuItem(
+		{
+			label: 'Reload App',
+			click: function() {
+				ipc.send('reload');
+			}
+		}
+	));
+
+	menu.append(new MenuItem(
+		{
+			label: 'Inspect Element',
+			click: function() {
+				ipc.send('inspectElement', mouseX, mouseY);
+			}
+		}
+	));
+
+	window.addEventListener('contextmenu', function (e) {
+		e.preventDefault();
+		mouseX = e.x;
+		mouseY = e.y;
+		menu.popup(remote.getCurrentWindow());
+	}, false);
 
 	// Templates
 
@@ -51,32 +88,6 @@ window.onload = function() {
 		return editor;
 	}
 
-	function createToggler(toggler, content) {
-		toggler = $(toggler);
-		content = $(content);
-
-		toggler.on(
-			'click',
-			function(event) {
-				if (!content.hasClass('hide')) {
-					return content.toggleClass('hide');
-				}
-
-				$('.dropdown-list').each(
-					function() {
-						if (!$(this).hasClass('hide')) {
-							$(this).addClass('hide');
-						}
-					}
-				);
-
-				content.toggleClass('hide');
-
-				toggler.toggleClass('open', !content.hasClass('hide'));
-			}
-		);
-	}
-
 	function populateEditors(data) {
 		if (data.html) {
 			HTMLEditor.doc.setValue(data.html);
@@ -95,24 +106,38 @@ window.onload = function() {
 		fs.readdir(
 			type + '/',
 			function(err, files) {
-				if (files.length) {
-					var buffer = _.map(
-						files,
-						function(item, index) {
-							var doodleName = item.match(/(.*)\./);
+				if (!err) {
+					if (files.length) {
+						var buffer = _.map(
+							files,
+							function(item, index) {
+								var doodleName = item.match(/(.*)\./);
 
-							return _.template(
-								template,
-								{
-									doodleName: doodleName[1],
-									fileName: item,
-									type: type
-								}
-							);
-						}
-					);
+								return _.template(
+									template,
+									{
+										doodleName: doodleName[1],
+										fileName: item,
+										type: type
+									}
+								);
+							}
+						);
 
-					doodlesMenu.find(list).html(buffer.join(''));
+						doodlesMenu.find(list).html(buffer.join(''));
+					}
+				}
+				else {
+					if (err.code === "ENOENT") {
+						fs.mkdir(type + '/', function(err) {
+							if (!err) {
+								renderDoodleList(type, template, list);
+							}
+						});
+					}
+					else {
+						console.log('err: ', err);
+					}
 				}
 			}
 		);
@@ -286,21 +311,28 @@ window.onload = function() {
 	renderSavedDoodleList();
 	renderDoodleTemplateList();
 
-	createToggler('#menuToggle', '.toggle-list');
-
-	// Toolbar
+	// Toolbar Actions
 
 	$('.open-dev-tools').on(
 		'click',
 		function() {
-			gui.Window.get().showDevTools();
+			ipc.send('devTools');
 		}
 	);
 
 	$('.reload').on(
 		'click',
 		function() {
-			gui.Window.get().reload();
+			ipc.send('reload');
+		}
+	);
+
+	// Save / Load Menu
+
+	$('#doodlesToggle').on(
+		'click',
+		function() {
+			body.toggleClass('doodles-menu-open');
 		}
 	);
 
@@ -320,38 +352,44 @@ window.onload = function() {
 		}
 	);
 
-	$('#doodlesToggle').on(
-		'click',
-		function() {
-			body.toggleClass('doodles-menu-open');
-		}
-	);
-
 	$('#loadDoodle .doodle-list, #doodleTemplates .doodle-template-list').on(
 		'click',
 		'li',
 		function(event) {
-			if (confirm('Are you sure you want to load this Doodle? All current data will be lost.')) {
-				var currentTarget = $(event.currentTarget);
+			var options = {
+				message: 'Are you sure you want to load this Doodle?',
+				detail: 'All current data will be lost.',
+				buttons: ['Cancel', 'Load']
+			};
 
-				var fileName = currentTarget.data('filename');
+			var fileName = $(event.currentTarget).data('filename');
+			var fileType = $(event.currentTarget).data('type');
 
-				fs.readFile(
-					CWD + '/' + currentTarget.data('type') + '/' + fileName,
-					{
-						encoding: 'utf8'
-					},
-					function(err, data) {
-						if (err) throw err;
-
-						data = JSON.parse(data);
-
-						populateEditors(data);
-					}
-				);
-			}
+			ipc.send('confirmLoad', fileName, fileType, options);
 		}
 	);
+
+	ipc.on('confirmLoadResponse', function(load, fileName, fileType) {
+		if (load) {
+			fs.readFile(
+				CWD + '/' + fileType + '/' + fileName,
+				{
+					encoding: 'utf8'
+				},
+				function(err, data) {
+					if (err) throw err;
+
+					data = JSON.parse(data);
+
+					populateEditors(data);
+
+					body.removeClass('doodles-menu-open');
+				}
+			);
+		}
+	});
+
+	// Editor options overlay toggle
 
 	$('.options-toggle').on(
 		'click',

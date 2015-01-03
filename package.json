@@ -8,17 +8,6 @@
     "css",
     "javascript"
   ],
-  "window": {
-    "title": "DocDoodle",
-    "icon": "link.png",
-    "toolbar": false,
-    "frame": true,
-    "width": 1000,
-    "height": 900,
-    "position": "mouse",
-    "min_width": 600,
-    "min_height": 200
-  },
   "dependencies": {
     "lodash": "^2.4.1",
     "yuicompressor": "^2.4.8"
