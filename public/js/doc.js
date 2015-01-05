@@ -118,11 +118,14 @@ window.onload = function() {
 				}
 				else {
 					if (err.code === "ENOENT") {
-						fs.mkdir(type + '/', function(err) {
-							if (!err) {
-								renderDoodleList(type, template, list);
+						fs.mkdir(
+							type + '/',
+							function(err) {
+								if (!err) {
+									renderDoodleList(type, template, list);
+								}
 							}
-						});
+						);
 					}
 					else {
 						console.log('err: ', err);
