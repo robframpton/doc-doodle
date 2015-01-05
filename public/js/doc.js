@@ -381,3 +381,12 @@ window.onload = function() {
 		}
 	);
 };
+
+process.on(
+	'uncaughtException',
+	function(err) {
+		console.error('uncaughtException:', err);
+
+		console.error(err.stack);
+	}
+);
